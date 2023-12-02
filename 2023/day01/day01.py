@@ -22,9 +22,11 @@ number_map = {
     'eight': '8',
     'nine': '9'
 }
+# regex magic https://stackoverflow.com/questions/5616822/how-to-use-regex-to-find-all-overlapping-matches
+# regex allows for overlapping matches
 
 exp = '(?=('+'|'.join(number_map.keys())+'|\d))'
 line_number2 = [re.findall(exp, line) for line in lines]
-line_number_numberical_2 = [[number_map.get(number, number) for number in line] for line in line_number2]
-sum_lines = [int(numbers[0] + numbers[-1]) for numbers in line_number_numberical_2]
+line_number_numerical_2 = [[number_map.get(number, number) for number in line] for line in line_number2]
+sum_lines = [int(numbers[0] + numbers[-1]) for numbers in line_number_numerical_2]
 print(sum(sum_lines))
