@@ -60,6 +60,6 @@ class Hand():
         return f'Hand: {self.hand_string} - value {self.value}'
 
 
-game_sorted = sorted([[Hand(h), bid] for h, bid in game])
+game_sorted = sorted([Hand(h), bid] for h, bid in game)
 result = sum(bid * rank for rank, (_, bid) in enumerate(game_sorted, start=1))
 print(result)

@@ -1,7 +1,7 @@
 import collections
 import functools
 from itertools import islice
-from typing import Tuple
+from typing import Tuple, Optional
 
 POINT_TYP = Tuple[int, int]
 
@@ -30,6 +30,7 @@ def sliding_window(iterable, n):
         window.append(x)
         yield tuple(window)
 
+
 def batched(iterable, n):
     # batched('ABCDEFG', 3) --> ABC DEF G
     if n < 1:
@@ -37,3 +38,11 @@ def batched(iterable, n):
     it = iter(iterable)
     while batch := tuple(islice(it, n)):
         yield batch
+
+
+RANGE_TYP = Tuple[int, int]
+
+
+def overlap(x: RANGE_TYP, y: RANGE_TYP) -> Optional[RANGE_TYP]:
+    o = max(x[0], y[0]), min(x[-1], y[-1])
+    return o if o[1] > o[0] else None
