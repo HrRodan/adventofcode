@@ -18,7 +18,6 @@ for i, step in enumerate(cycle(steps)):
 
 
 # part 2
-
 def get_count_until_z(position):
     for count, step in enumerate(cycle(steps)):
         if position[2] == 'Z':
