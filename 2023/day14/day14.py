@@ -10,19 +10,19 @@ with open('input.txt') as file:
 def total_load_of_line(rock_line: str):
     length_rock_line = len(rock_line)
     total_load = 0
-    round_rock_count = length_rock_line
+    round_rock_value = length_rock_line
     new_rocks = ['.'] * length_rock_line
     current_location = 0
     for i, r in enumerate(rock_line, start=1):
         if r == '#':
-            round_rock_count = length_rock_line - i
+            round_rock_value = length_rock_line - i
             new_rocks[i - 1] = '#'
             current_location = i
         elif r == 'O':
             new_rocks[current_location] = 'O'
             current_location += 1
-            total_load += round_rock_count
-            round_rock_count -= 1
+            total_load += round_rock_value
+            round_rock_value -= 1
 
     return new_rocks, total_load
 

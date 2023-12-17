@@ -10,7 +10,7 @@ def sign(x):
     return -1 if x < 0 else (1 if x > 0 else 0)
 
 
-@functools.lru_cache(1000)
+@functools.lru_cache(10000)
 def tuple_add(t1: POINT_TYP, t2: POINT_TYP):
     return (t1[0] + t2[0], t1[1] + t2[1])
 
@@ -46,3 +46,13 @@ RANGE_TYP = Tuple[int, int]
 def overlap(x: RANGE_TYP, y: RANGE_TYP) -> Optional[RANGE_TYP]:
     o = max(x[0], y[0]), min(x[-1], y[-1])
     return o if o[1] > o[0] else None
+
+
+TURN_RIGHT = {
+    (0, 1): (1, 0),
+    (1, 0): (0, -1),
+    (0, -1): (-1, 0),
+    (-1, 0): (0, 1)
+}
+
+TURN_LEFT = {v: k for k, v in TURN_RIGHT.items()}
