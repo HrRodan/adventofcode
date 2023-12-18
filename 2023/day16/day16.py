@@ -67,3 +67,6 @@ print(count_visited_tiles((0, -1), (0, 1)))
 # part 2
 start_directions = ([t for x in range(cave_shape[1]) for t in [((-1, x), (1, 0)), ((cave_shape[0], x), (-1, 0))]] +
                     [k for y in range(cave_shape[0]) for k in [((y, -1), (0, 1)), ((y, cave_shape[1]), (0, -1))]])
+
+result_2 = max(count_visited_tiles(*x) for x in start_directions)
+print(result_2)
