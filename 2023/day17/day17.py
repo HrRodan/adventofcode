@@ -31,7 +31,7 @@ target = (shape[0] - 1, shape[1] - 1)
 def tuple_diff(t1: POINT_TYP, t2: POINT_TYP):
     return (t2[0] - t1[0], t2[1] - t1[1])
 
-point_direction_to_visit = []
+oint_direction_to_visit = []
 # heap order: min(path_weight, count_direction, direction, position)
 heapq.heappush(point_direction_to_visit, (0, 0, (0, 0), source))
 # visited order (position, count_direction, direction : total_weight)
