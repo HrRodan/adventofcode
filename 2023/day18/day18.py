@@ -46,6 +46,6 @@ for x, y, c in dig_map:
 
 polygon = Polygon(trench_edges_p2)
 # each polygon has 4 outside edges more than inside edges
-# each point on edge contribues 1/2 on average
+# each point on edge contributes 1/2 on average
 # 4 outside points contribute 4 * 3/4
 print(int(polygon.area+(polygon.length-4)/2+3))
