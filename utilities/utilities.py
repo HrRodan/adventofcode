@@ -1,7 +1,7 @@
 import collections
 import functools
 from itertools import islice
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 
 POINT_TYP = Tuple[int, int]
 
@@ -43,9 +43,22 @@ def batched(iterable, n):
 RANGE_TYP = Tuple[int, int]
 
 
+@functools.lru_cache(1000)
 def overlap(x: RANGE_TYP, y: RANGE_TYP) -> Optional[RANGE_TYP]:
     o = max(x[0], y[0]), min(x[-1], y[-1])
     return o if o[1] > o[0] else None
+
+
+@functools.lru_cache(1000)
+def non_overlap_from_first(x: RANGE_TYP, y: RANGE_TYP) -> List[RANGE_TYP]:
+    if not overlap(x, y):
+        return [x]
+    non_overlaps = []
+    if x[0] < y[0]:
+        non_overlaps.append((x[0], y[0]))
+    if x[1] > y[1]:
+        non_overlaps.append((y[1], x[1]))
+    return non_overlaps
 
 
 TURN_RIGHT = {

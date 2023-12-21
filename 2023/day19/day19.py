@@ -1,7 +1,10 @@
+import math
 import operator
 import re
 from collections import defaultdict
 from typing import List, Tuple
+
+from utilities import RANGE_TYP, overlap, non_overlap_from_first
 
 with open('input.txt') as file:
     workflows, ratings = file.read().split('\n\n')
@@ -59,4 +62,52 @@ for r in ratings:
         r_ratings.append(r)
 
 result = sum(y for a in a_ratings for y in a)
+print(result)
+
+# part 2
+
+workflows_part2 = {}
+for w, cmds in workflows.items():
+    new_cmds = []
+    for cmd in cmds:
+        if type(cmd) is str:
+            new_cmds.append(cmd)
+            continue
+        if cmd[1] == operator.lt:
+            range_cmd = (0, cmd[2])
+        else:
+            range_cmd = (cmd[2] + 1, 4001)
+        new_cmds.append((cmd[0], range_cmd, cmd[3]))
+    workflows_part2[w] = new_cmds
+
+# tuple(x, m, a, s)
+start_range = tuple((1, 4001) for _ in range(4))
+
+
+def follow_workflow(input_ranges: Tuple[RANGE_TYP], target: str):
+    count_valid = 0
+    if target == 'R':
+        return 0
+    if target == 'A':
+        return math.prod(x[1] - x[0] for x in input_ranges)
+    for cmd_tuple in workflows_part2[target]:
+        if type(cmd_tuple) is str:
+            count_valid += follow_workflow(input_ranges, cmd_tuple)
+            break
+        position, range_cmd, target = cmd_tuple
+        overlap_range = overlap(input_ranges[position], range_cmd)
+        if overlap_range:
+            non_overlap_range = non_overlap_from_first(input_ranges[position], range_cmd)[0]
+            input_range_list_overlap = list(input_ranges)
+            input_range_list_non_overlap = input_range_list_overlap.copy()
+            input_range_list_overlap[position] = overlap_range
+            input_range_list_non_overlap[position] = non_overlap_range
+            # non overlap
+            input_ranges = tuple(input_range_list_non_overlap)
+
+            count_valid += follow_workflow(tuple(input_range_list_overlap), target)
+
+    return count_valid
+
+result = follow_workflow(start_range, 'in')
 print(result)
