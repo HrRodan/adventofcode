@@ -1,3 +1,4 @@
+import math
 from collections import defaultdict, deque
 from typing import Dict
 
@@ -27,42 +28,38 @@ for c in conjunction_modules.keys():
 
 other_modules = all_modules - module_connections.keys()
 
+# for part 2 look at inputs to previous conjunction module
+previous_to_rx = [k for k, v in module_connections.items() if 'rx' in v][0]
+inputs_to_previous = {x: [] for x in conjunction_modules[previous_to_rx]}
+
 count_high_pulses = 0
 count_low_pulses = 0
-for i in range(1, 10000000):
+for i in range(1, 10000):
     # button press
-    rx_low_pulse = 0
-    rx_high_pulse = 0
     count_low_pulses += 1
     pulses_to_compute = deque([('broadcaster', False)])
     while pulses_to_compute:
         src, value = pulses_to_compute.popleft()
         targets = module_connections[src]
-        # if value:
-        #     count_high_pulses += len(targets)
-        # else:
-        #     count_low_pulses += len(targets)
+        if value:
+            count_high_pulses += len(targets)
+        else:
+            count_low_pulses += len(targets)
         for t in targets:
-            if t == 'rx':
-                if value:
-                    count_high_pulses += 1
-                else:
-                    count_low_pulses += 1
-            elif t in flip_flop_modules:
+            if t in flip_flop_modules:
                 if value:
                     continue
                 flip_flop_modules[t] = not flip_flop_modules[t]
                 pulses_to_compute.append((t, flip_flop_modules[t]))
             elif t in conjunction_modules:
+                if t == previous_to_rx and value:
+                    inputs_to_previous[src].append(i)
                 conjunction_modules[t][src] = value
                 if all(conjunction_modules[t].values()):
                     pulses_to_compute.append((t, False))
                 else:
                     pulses_to_compute.append((t, True))
-    if rx_high_pulse != 0 or rx_low_pulse != 0:
-        print(rx_low_pulse, rx_high_pulse)
-    if rx_low_pulse == 1 and rx_high_pulse == 0:
-        print(i)
-        break
+    if i == 1000:
+        print(count_high_pulses * count_low_pulses)
 
-#print(count_high_pulses * count_low_pulses)
+print(math.lcm(*[x[0] for x in inputs_to_previous.values()]))
