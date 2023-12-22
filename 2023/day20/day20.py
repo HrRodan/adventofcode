@@ -23,13 +23,13 @@ for src, tgts in modules_raw:
     elif module_typ == '&':
         conjunction_modules[module_name] = {}
 
-for c in conjunction_modules.keys():
+for c in conjunction_modules:
     conjunction_modules[c] = {k: False for k, v in module_connections.items() if c in v}
 
-other_modules = all_modules - module_connections.keys()
+all_lengths = {k: len(v) for k, v in module_connections.items()}
 
 # for part 2 look at inputs to previous conjunction module
-previous_to_rx = [k for k, v in module_connections.items() if 'rx' in v][0]
+previous_to_rx = next(k for k, v in module_connections.items() if 'rx' in v)
 inputs_to_previous = {x: [] for x in conjunction_modules[previous_to_rx]}
 
 count_high_pulses = 0
@@ -42,9 +42,9 @@ for i in range(1, 10000):
         src, value = pulses_to_compute.popleft()
         targets = module_connections[src]
         if value:
-            count_high_pulses += len(targets)
+            count_high_pulses += all_lengths[src]
         else:
-            count_low_pulses += len(targets)
+            count_low_pulses += all_lengths[src]
         for t in targets:
             if t in flip_flop_modules:
                 if value:
@@ -55,7 +55,7 @@ for i in range(1, 10000):
                 if t == previous_to_rx and value:
                     inputs_to_previous[src].append(i)
                 conjunction_modules[t][src] = value
-                if all(conjunction_modules[t].values()):
+                if value and all(conjunction_modules[t].values()):
                     pulses_to_compute.append((t, False))
                 else:
                     pulses_to_compute.append((t, True))
